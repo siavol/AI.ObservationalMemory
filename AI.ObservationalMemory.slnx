@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AiObservationalMemory.Example/AiObservationalMemory.Example.csproj" />
+  <Project Path="AiObservationalMemory/AiObservationalMemory.csproj" />
+</Solution>
