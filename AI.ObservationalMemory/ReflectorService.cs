@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Reflector service that prunes/deduplicates observations using an LLM call.

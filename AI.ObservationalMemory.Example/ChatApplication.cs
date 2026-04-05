@@ -1,11 +1,11 @@
 using System.Text;
-using AiObservationalMemory;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spectre.Console;
+using Svl.AI.ObservationalMemory;
 
-namespace AiObservationalMemory.Example;
+namespace AI.ObservationalMemory.Example;
 
 public class ChatApplication
 {
@@ -173,8 +173,6 @@ public class ChatApplication
         {
             memoryStatus.AppendLine($"[yellow]No observations yet. Start chatting to create observations![/]");
         }
-
-        // memoryStatus.AppendLine();
 
         var memoryPanel = new Panel(new Markup(memoryStatus.ToString()))
         {

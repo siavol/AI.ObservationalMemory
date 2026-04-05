@@ -1,4 +1,4 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Per-user observational memory containing durable observations and recent unprocessed messages.

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 public class ObservationalMemorySettings
 {

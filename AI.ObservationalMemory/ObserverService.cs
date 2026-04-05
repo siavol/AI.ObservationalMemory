@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Observer service that compresses raw messages into durable observations using an LLM call.

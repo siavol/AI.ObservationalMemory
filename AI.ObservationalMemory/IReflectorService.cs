@@ -1,4 +1,4 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Prunes and deduplicates observations using an LLM call when the observation count exceeds the configured threshold.

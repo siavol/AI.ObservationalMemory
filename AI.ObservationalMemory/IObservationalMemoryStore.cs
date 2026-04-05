@@ -1,4 +1,4 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Persistence interface for per-user observational memory.

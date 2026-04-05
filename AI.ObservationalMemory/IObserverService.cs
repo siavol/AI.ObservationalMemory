@@ -1,4 +1,4 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Compresses raw messages into durable observations using an LLM call.

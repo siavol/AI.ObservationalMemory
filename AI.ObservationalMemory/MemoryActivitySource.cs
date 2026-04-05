@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Shared ActivitySource for observational memory operations.

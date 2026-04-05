@@ -1,5 +1,4 @@
-using AiObservationalMemory;
-using AiObservationalMemory.Example;
+using AI.ObservationalMemory.Example;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenAI;
+using Svl.AI.ObservationalMemory;
 
 var builder = Host.CreateApplicationBuilder(args);
 
