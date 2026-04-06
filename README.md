@@ -232,6 +232,25 @@ public class CustomMemoryPromptProvider : IMemoryPromptProvider
 builder.Services.AddSingleton<IMemoryPromptProvider, CustomMemoryPromptProvider>();
 ```
 
+## Running Integration Tests
+
+The integration tests validate the library's end-to-end functionality by making real OpenAI API calls. To run them, you need to configure an OpenAI API key.
+
+Set up your OpenAI API key using .NET user secrets:
+
+```shell
+cd tests/AI.ObservationalMemory.Tests.Integration
+dotnet user-secrets set "OpenAI:ApiKey" "sk-your-key-here"
+```
+
+Then run the tests:
+
+```shell
+dotnet test
+```
+
+**Note**: Integration tests use the `gpt-4o-mini` model and make real API calls, which incur small costs. The tests use a low threshold (3 messages) to minimize token usage.
+
 ## License
 
 MIT License - see LICENSE file for details.

@@ -226,12 +226,12 @@ public class ChatApplication
         // Trigger observer if threshold reached
         if (memory.RawMessages.Count >= _settings.ObserverRawMessageThreshold)
         {
-            AnsiConsole.Status()
+            await AnsiConsole.Status()
                 .Spinner(Spinner.Known.Dots)
-                .Start("[yellow]Extracting observations from conversation...[/]", ctx =>
+                .StartAsync("[yellow]Extracting observations from conversation...[/]", async ctx =>
                 {
-                    memory = _observerService.ObserveAsync(memory).GetAwaiter().GetResult();
-                    _memoryStore.SaveAsync(UserId, memory).GetAwaiter().GetResult();
+                    memory = await _observerService.ObserveAsync(memory);
+                    await _memoryStore.SaveAsync(UserId, memory);
                 });
 
             AnsiConsole.MarkupLine($"[green]✓[/] Extracted {memory.Observations.Count} observations!");
@@ -242,12 +242,12 @@ public class ChatApplication
             {
                 var beforeCount = memory.Observations.Count;
                 
-                AnsiConsole.Status()
+                await AnsiConsole.Status()
                     .Spinner(Spinner.Known.Dots)
-                    .Start("[yellow]Consolidating observations...[/]", ctx =>
+                    .StartAsync("[yellow]Consolidating observations...[/]", async ctx =>
                     {
-                        memory = _reflectorService.ReflectAsync(memory).GetAwaiter().GetResult();
-                        _memoryStore.SaveAsync(UserId, memory).GetAwaiter().GetResult();
+                        memory = await _reflectorService.ReflectAsync(memory);
+                        await _memoryStore.SaveAsync(UserId, memory);
                     });
 
                 AnsiConsole.MarkupLine($"[green]✓[/] Consolidated observations: {beforeCount} → {memory.Observations.Count}");
