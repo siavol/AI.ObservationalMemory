@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Svl.AI.ObservationalMemory;
 
@@ -18,10 +17,10 @@ public sealed class FileSystemObservationalMemoryStore : IObservationalMemorySto
     private const string TimestampFormat = "yyyy-MM-dd HH:mm:ss";
 
     public FileSystemObservationalMemoryStore(
-        IOptions<FileSystemObservationalMemoryStoreOptions> options,
+        FileSystemObservationalMemoryStoreOptions options,
         ILogger<FileSystemObservationalMemoryStore> logger)
     {
-        _options = options.Value;
+        _options = options;
         _logger = logger;
     }
 

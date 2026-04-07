@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Spectre.Console;
 using Svl.AI.ObservationalMemory;
 
@@ -27,8 +26,8 @@ public class ChatApplication
         ObservationalMemoryContext memoryContext,
         IObserverService observerService,
         IReflectorService reflectorService,
-        IOptions<ObservationalMemorySettings> memorySettings,
-        IOptions<FileSystemObservationalMemoryStoreOptions> storageOptions,
+        ObservationalMemorySettings memorySettings,
+        FileSystemObservationalMemoryStoreOptions storageOptions,
         ILogger<ChatApplication> logger)
     {
         _chatClient = chatClient;
@@ -36,8 +35,8 @@ public class ChatApplication
         _memoryContext = memoryContext;
         _observerService = observerService;
         _reflectorService = reflectorService;
-        _settings = memorySettings.Value;
-        _storageOptions = storageOptions.Value;
+        _settings = memorySettings;
+        _storageOptions = storageOptions;
         _logger = logger;
     }
 

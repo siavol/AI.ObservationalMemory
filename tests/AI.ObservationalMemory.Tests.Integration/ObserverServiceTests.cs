@@ -15,30 +15,30 @@ public class ObserverServiceTests(IChatClient chatClient)
 
         // Arrange
         var promptProvider = new DefaultMemoryPromptProvider();
-        var memory = new UserMemory();
         
         // Create ObserverService
         var observerService = new ObserverService(chatClient, promptProvider, logger); 
         
-        // Simulate 3 chat exchanges
-        var exchanges = new[]
-        {
-            ("What's your favorite programming language?", "I enjoy helping with many languages, but C# and Python are particularly powerful."),
-            ("I'm working on machine learning projects.", "That's exciting! Machine learning opens up many possibilities."),
-            ("I prefer using Python for data science.", "Python is an excellent choice for data science with its rich ecosystem of libraries.")
+        // Create memory with 3 chat exchanges
+        var memory = new UserMemory {
+            RawMessages = [
+                new RawMessage{
+                    Timestamp = DateTimeOffset.UtcNow,
+                    UserMessage = "What's your favorite programming language?",
+                    AssistantResponse = "I enjoy helping with many languages, but C# and Python are particularly powerful."
+                },
+                new RawMessage{
+                    Timestamp = DateTimeOffset.UtcNow,
+                    UserMessage = "I'm working on machine learning projects.",
+                    AssistantResponse = "That's exciting! Machine learning opens up many possibilities."
+                },
+                new RawMessage{
+                    Timestamp = DateTimeOffset.UtcNow,
+                    UserMessage = "I prefer using Python for data science.",
+                    AssistantResponse = "Python is an excellent choice for data science with its rich ecosystem of libraries."
+                }
+            ]
         };
-        foreach (var (userMessage, assistantResponse) in exchanges)
-        {
-            // Add the exchange as a raw message
-            memory.RawMessages.Add(new RawMessage
-            {
-                Timestamp = DateTimeOffset.UtcNow,
-                UserMessage = userMessage,
-                AssistantResponse = assistantResponse
-            });
-        }
-        
-        // Get raw message count before compression
         var rawMessageCountBeforeCompress = memory.RawMessages.Count;
         
         // Act

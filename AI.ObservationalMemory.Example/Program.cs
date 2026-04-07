@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using OpenAI;
 using Svl.AI.ObservationalMemory;
 
@@ -19,15 +18,14 @@ builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
 
 // Configure file system storage
-builder.Services.AddOptions<FileSystemObservationalMemoryStoreOptions>()
-    .Configure(options =>
-    {
-        options.BaseDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "AiObservationalMemory.Example");
-        options.ObservationsFileName = "memory.observations.md";
-        options.RawMessagesFileName = "memory.raw.md";
-    });
+builder.Services.AddSingleton(new FileSystemObservationalMemoryStoreOptions
+{
+    BaseDirectory = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "AiObservationalMemory.Example"),
+    ObservationsFileName = "memory.observations.md",
+    RawMessagesFileName = "memory.raw.md"
+});
 
 // Configure observational memory settings
 builder.Services.AddSingleton(new ObservationalMemorySettings
@@ -36,8 +34,6 @@ builder.Services.AddSingleton(new ObservationalMemorySettings
     ObserverRawMessageThreshold = 5,
     ReflectorObservationThreshold = 15 
 });
-builder.Services.AddSingleton<IOptions<ObservationalMemorySettings>>(sp =>
-    Options.Create(sp.GetRequiredService<ObservationalMemorySettings>()));
 
 // Register OpenAI client
 var apiKey = builder.Configuration["OpenAI:ApiKey"] 
