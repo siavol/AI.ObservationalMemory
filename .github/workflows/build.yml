@@ -30,4 +30,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
       env:
-        OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
+        OpenAI__ApiKey: ${{ secrets.OPENAI_APIKEY }}
