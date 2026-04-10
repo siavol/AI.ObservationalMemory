@@ -11,7 +11,7 @@ namespace Svl.AI.ObservationalMemory;
 public sealed class ObserverService : IObserverService
 {
     private readonly IChatClient _chatClient;
-    private readonly ILogger<ObserverService> _logger;
+    private readonly ILogger? _logger;
     private readonly string _observerPrompt;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -22,10 +22,10 @@ public sealed class ObserverService : IObserverService
     public ObserverService(
         IChatClient chatClient,
         IMemoryPromptProvider promptProvider,
-        ILogger<ObserverService> logger)
+        ILoggerProvider? loggerProvider = null)
     {
         _chatClient = chatClient;
-        _logger = logger;
+        _logger = loggerProvider?.CreateLogger(typeof(ObserverService).FullName ?? nameof(ObserverService));
         _observerPrompt = promptProvider.ObserverPrompt;
     }
 
@@ -50,7 +50,7 @@ public sealed class ObserverService : IObserverService
 
             var newObservations = ParseObservations(responseText);
 
-            _logger.LogInformation(
+            _logger?.LogInformation(
                 "Observer extracted {Count} observations from {RawCount} raw messages",
                 newObservations.Count,
                 memory.RawMessages.Count);
@@ -74,7 +74,7 @@ public sealed class ObserverService : IObserverService
         catch (Exception ex)
         {
             activity?.SetException(ex);
-            _logger.LogWarning(ex, "Observer LLM call failed; raw messages preserved");
+            _logger?.LogWarning(ex, "Observer LLM call failed; raw messages preserved");
             throw;
         }
     }

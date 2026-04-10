@@ -10,14 +10,11 @@ public class ObserverServiceTests(IChatClient chatClient)
     [Test]
     public async Task MakeObservations_AfterEnoughMessages(CancellationToken cancellationToken)
     {
-        // TODO: reconsider using logger in library
-        var logger = NullLogger<ObserverService>.Instance; 
-
         // Arrange
         var promptProvider = new DefaultMemoryPromptProvider();
         
-        // Create ObserverService
-        var observerService = new ObserverService(chatClient, promptProvider, logger); 
+        // Create ObserverService (no logger provider - logging is optional)
+        var observerService = new ObserverService(chatClient, promptProvider); 
         
         // Create memory with 3 chat exchanges
         var memory = new UserMemory {

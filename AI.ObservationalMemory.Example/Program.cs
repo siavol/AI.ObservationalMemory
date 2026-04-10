@@ -12,11 +12,6 @@ var builder = Host.CreateApplicationBuilder(args);
 // Add user secrets for API key
 builder.Configuration.AddUserSecrets<Program>();
 
-// Configure logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.SetMinimumLevel(LogLevel.Warning);
-
 // Configure file system storage
 builder.Services.AddSingleton(new FileSystemObservationalMemoryStoreOptions
 {
