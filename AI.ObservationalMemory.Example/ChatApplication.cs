@@ -1,11 +1,10 @@
 using System.Text;
-using AiObservationalMemory;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Spectre.Console;
+using Svl.AI.ObservationalMemory;
 
-namespace AiObservationalMemory.Example;
+namespace AI.ObservationalMemory.Example;
 
 public class ChatApplication
 {
@@ -27,8 +26,8 @@ public class ChatApplication
         ObservationalMemoryContext memoryContext,
         IObserverService observerService,
         IReflectorService reflectorService,
-        IOptions<ObservationalMemorySettings> memorySettings,
-        IOptions<FileSystemObservationalMemoryStoreOptions> storageOptions,
+        ObservationalMemorySettings memorySettings,
+        FileSystemObservationalMemoryStoreOptions storageOptions,
         ILogger<ChatApplication> logger)
     {
         _chatClient = chatClient;
@@ -36,8 +35,8 @@ public class ChatApplication
         _memoryContext = memoryContext;
         _observerService = observerService;
         _reflectorService = reflectorService;
-        _settings = memorySettings.Value;
-        _storageOptions = storageOptions.Value;
+        _settings = memorySettings;
+        _storageOptions = storageOptions;
         _logger = logger;
     }
 
@@ -174,8 +173,6 @@ public class ChatApplication
             memoryStatus.AppendLine($"[yellow]No observations yet. Start chatting to create observations![/]");
         }
 
-        // memoryStatus.AppendLine();
-
         var memoryPanel = new Panel(new Markup(memoryStatus.ToString()))
         {
             Header = new PanelHeader("[bold]Memory Status[/]"),
@@ -228,12 +225,12 @@ public class ChatApplication
         // Trigger observer if threshold reached
         if (memory.RawMessages.Count >= _settings.ObserverRawMessageThreshold)
         {
-            AnsiConsole.Status()
+            await AnsiConsole.Status()
                 .Spinner(Spinner.Known.Dots)
-                .Start("[yellow]Extracting observations from conversation...[/]", ctx =>
+                .StartAsync("[yellow]Extracting observations from conversation...[/]", async ctx =>
                 {
-                    memory = _observerService.ObserveAsync(memory).GetAwaiter().GetResult();
-                    _memoryStore.SaveAsync(UserId, memory).GetAwaiter().GetResult();
+                    memory = await _observerService.ObserveAsync(memory);
+                    await _memoryStore.SaveAsync(UserId, memory);
                 });
 
             AnsiConsole.MarkupLine($"[green]✓[/] Extracted {memory.Observations.Count} observations!");
@@ -244,12 +241,12 @@ public class ChatApplication
             {
                 var beforeCount = memory.Observations.Count;
                 
-                AnsiConsole.Status()
+                await AnsiConsole.Status()
                     .Spinner(Spinner.Known.Dots)
-                    .Start("[yellow]Consolidating observations...[/]", ctx =>
+                    .StartAsync("[yellow]Consolidating observations...[/]", async ctx =>
                     {
-                        memory = _reflectorService.ReflectAsync(memory).GetAwaiter().GetResult();
-                        _memoryStore.SaveAsync(UserId, memory).GetAwaiter().GetResult();
+                        memory = await _reflectorService.ReflectAsync(memory);
+                        await _memoryStore.SaveAsync(UserId, memory);
                     });
 
                 AnsiConsole.MarkupLine($"[green]✓[/] Consolidated observations: {beforeCount} → {memory.Observations.Count}");

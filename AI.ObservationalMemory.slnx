@@ -1,4 +1,7 @@
 <Solution>
-  <Project Path="AiObservationalMemory.Example/AiObservationalMemory.Example.csproj" />
-  <Project Path="AiObservationalMemory/AiObservationalMemory.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/AI.ObservationalMemory.Tests.Integration/AI.ObservationalMemory.Tests.Integration.csproj" />
+  </Folder>
+  <Project Path="AI.ObservationalMemory.Example/AI.ObservationalMemory.Example.csproj" />
+  <Project Path="AI.ObservationalMemory/AI.ObservationalMemory.csproj" />
 </Solution>

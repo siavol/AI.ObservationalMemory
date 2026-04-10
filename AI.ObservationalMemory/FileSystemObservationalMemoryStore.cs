@@ -1,9 +1,8 @@
 using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// File system-based implementation of <see cref="IObservationalMemoryStore"/>.
@@ -12,17 +11,17 @@ namespace AiObservationalMemory;
 public sealed class FileSystemObservationalMemoryStore : IObservationalMemoryStore
 {
     private readonly FileSystemObservationalMemoryStoreOptions _options;
-    private readonly ILogger<FileSystemObservationalMemoryStore> _logger;
+    private readonly ILogger? _logger;
     private readonly SemaphoreSlim _writeLock = new(1, 1);
 
     private const string TimestampFormat = "yyyy-MM-dd HH:mm:ss";
 
     public FileSystemObservationalMemoryStore(
-        IOptions<FileSystemObservationalMemoryStoreOptions> options,
-        ILogger<FileSystemObservationalMemoryStore> logger)
+        FileSystemObservationalMemoryStoreOptions options,
+        ILoggerProvider? loggerProvider = null)
     {
-        _options = options.Value;
-        _logger = logger;
+        _options = options;
+        _logger = loggerProvider?.CreateLogger(typeof(FileSystemObservationalMemoryStore).FullName ?? nameof(FileSystemObservationalMemoryStore));
     }
 
     public async Task<UserMemory> LoadAsync(string userId, CancellationToken cancellationToken = default)
@@ -62,7 +61,7 @@ public sealed class FileSystemObservationalMemoryStore : IObservationalMemorySto
             activity?.SetTag(MemoryActivitySource.TagKeys.ObservationsCount, observations.Count);
             activity?.SetTag(MemoryActivitySource.TagKeys.RawMessagesCount, rawMessages.Count);
 
-            _logger.LogDebug(
+            _logger?.LogDebug(
                 "Loaded memory for user {UserId}: {ObservationCount} observations, {RawMessageCount} raw messages",
                 userId, observations.Count, rawMessages.Count);
 
@@ -71,7 +70,7 @@ public sealed class FileSystemObservationalMemoryStore : IObservationalMemorySto
         catch (Exception ex)
         {
             activity?.SetException(ex);
-            _logger.LogError(ex, "Failed to load memory for user {UserId}", userId);
+            _logger?.LogError(ex, "Failed to load memory for user {UserId}", userId);
             return new UserMemory();
         }
     }
@@ -100,14 +99,14 @@ public sealed class FileSystemObservationalMemoryStore : IObservationalMemorySto
             var rawMessagesText = FormatRawMessages(memory.RawMessages);
             await File.WriteAllTextAsync(rawMessagesPath, rawMessagesText, cancellationToken);
 
-            _logger.LogDebug(
+            _logger?.LogDebug(
                 "Saved memory for user {UserId}: {ObservationCount} observations, {RawMessageCount} raw messages",
                 userId, memory.Observations.Count, memory.RawMessages.Count);
         }
         catch (Exception ex)
         {
             activity?.SetException(ex);
-            _logger.LogError(ex, "Failed to save memory for user {UserId}", userId);
+            _logger?.LogError(ex, "Failed to save memory for user {UserId}", userId);
             throw;
         }
         finally
@@ -128,13 +127,13 @@ public sealed class FileSystemObservationalMemoryStore : IObservationalMemorySto
             if (Directory.Exists(userDir))
             {
                 Directory.Delete(userDir, recursive: true);
-                _logger.LogInformation("Deleted memory directory for user {UserId}", userId);
+                _logger?.LogInformation("Deleted memory directory for user {UserId}", userId);
             }
         }
         catch (Exception ex)
         {
             activity?.SetException(ex);
-            _logger.LogError(ex, "Failed to delete memory for user {UserId}", userId);
+            _logger?.LogError(ex, "Failed to delete memory for user {UserId}", userId);
             throw;
         }
         finally

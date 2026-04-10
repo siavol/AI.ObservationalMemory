@@ -1,4 +1,4 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Carries per-request <see cref="UserMemory"/> via <see cref="AsyncLocal{T}"/>

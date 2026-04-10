@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 /// <summary>
 /// Reflector service that prunes/deduplicates observations using an LLM call.
@@ -11,7 +11,7 @@ namespace AiObservationalMemory;
 public sealed class ReflectorService : IReflectorService
 {
     private readonly IChatClient _chatClient;
-    private readonly ILogger<ReflectorService> _logger;
+    private readonly ILogger? _logger;
     private readonly string _reflectorPrompt;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -22,10 +22,10 @@ public sealed class ReflectorService : IReflectorService
     public ReflectorService(
         IChatClient chatClient,
         IMemoryPromptProvider promptProvider,
-        ILogger<ReflectorService> logger)
+        ILoggerProvider? loggerProvider = null)
     {
         _chatClient = chatClient;
-        _logger = logger;
+        _logger = loggerProvider?.CreateLogger(typeof(ReflectorService).FullName ?? nameof(ReflectorService));
         _reflectorPrompt = promptProvider.ReflectorPrompt;
     }
 
@@ -49,7 +49,7 @@ public sealed class ReflectorService : IReflectorService
 
             var prunedObservations = ParseObservations(responseText);
 
-            _logger.LogInformation(
+            _logger?.LogInformation(
                 "Reflector pruned observations from {Before} to {After}",
                 memory.Observations.Count,
                 prunedObservations.Count);
@@ -68,7 +68,7 @@ public sealed class ReflectorService : IReflectorService
         catch (Exception ex)
         {
             activity?.SetException(ex);
-            _logger.LogWarning(ex, "Reflector LLM call failed; observations preserved");
+            _logger?.LogWarning(ex, "Reflector LLM call failed; observations preserved");
             throw;
         }
     }

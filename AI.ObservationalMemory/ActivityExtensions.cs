@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
 
 public static class ActivityExtensions
 {

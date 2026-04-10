@@ -1,4 +1,5 @@
-namespace AiObservationalMemory;
+namespace Svl.AI.ObservationalMemory;
+
 
 /// <summary>
 /// Default implementation of <see cref="IMemoryPromptProvider"/> with embedded prompts.

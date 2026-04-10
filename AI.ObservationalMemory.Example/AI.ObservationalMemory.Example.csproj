@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AiObservationalMemory\AiObservationalMemory.csproj" />
+    <ProjectReference Include="..\AI.ObservationalMemory\AI.ObservationalMemory.csproj" />
   </ItemGroup>
 
   <ItemGroup>
